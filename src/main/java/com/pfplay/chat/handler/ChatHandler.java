@@ -2,6 +2,8 @@ package com.pfplay.chat.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pfplay.chat.model.Chat;
+import com.pfplay.chat.service.ChatService;
+import jdk.jshell.spi.ExecutionControlProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,20 +19,28 @@ import java.io.IOException;
 @Component
 public class ChatHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-    }
+    private final ChatService chatService;
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
-    }
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         Chat chat = mapper.readValue(payload, Chat.class);
 
+        if (chat.getMessageType() == Chat.MessageType.CHAT) {
+            chatService.sendChat(chat);
+            return;
+        }
+
+        if (chat.getMessageType() == Chat.MessageType.JOIN) {
+            chatService.addSession(chat);
+            return;
+        }
+
+        if (chat.getMessageType() == Chat.MessageType.LEAVE) {
+            chatService.removeSession(chat);
+            return;
+        }
+
+        throw new Exception();
     }
 }

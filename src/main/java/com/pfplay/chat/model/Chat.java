@@ -12,7 +12,18 @@ public class Chat {
     private String topic;
     private MessageType messageType;
 
-    private enum MessageType {
-        JOIN, LEAVE, CHAT
+    public enum MessageType {
+        JOIN("join"),
+        LEAVE("leave"),
+        CHAT("chat");
+
+        @Getter
+        private final String name;
+
+        MessageType(String name) {
+            this.name = name;
+        }
+
+
     }
 }

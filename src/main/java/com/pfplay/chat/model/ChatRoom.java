@@ -16,7 +16,4 @@ public class ChatRoom {
     private List<String> banUserList;
     private List<String> noChatUserList;
     private List<String> kickUserList;
-
-
-
 }

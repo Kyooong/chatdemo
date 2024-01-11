@@ -8,7 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Getter
 public class ChatSession {
     private WebSocketSession session;
-    private String userName;
-    private String userRole;
-
+    private String userEmail;
+    private String userNickname;
+    private String userAuthority;
 }
