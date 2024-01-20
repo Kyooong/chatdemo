@@ -23,7 +23,5 @@ public class Chat {
         MessageType(String name) {
             this.name = name;
         }
-
-
     }
 }

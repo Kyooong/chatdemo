@@ -1,4 +1,4 @@
-package com.pfplay.chat.repository;
+package com.pfplay.chat.infrastructure;
 
 import com.pfplay.chat.model.Chat;
 import org.springframework.data.repository.CrudRepository;
