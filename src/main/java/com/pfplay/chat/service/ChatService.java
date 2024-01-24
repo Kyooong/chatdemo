@@ -4,12 +4,15 @@ import com.pfplay.chat.exception.UnavailableChatMessageTypeException;
 import com.pfplay.chat.model.Chat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ChatService {
     private final RedisPublisher redisPublisher;
+    private final RedisSubscriber redisSubscriber;
+    private final RedisMessageListenerContainer redisMessageListenerContainer;
     public void handleChat(String topic, Chat chat) throws UnavailableChatMessageTypeException {
         if (chat.getMessageType().equals(Chat.MessageType.JOIN)) {
             enterChat(topic, chat);
@@ -35,10 +38,11 @@ public class ChatService {
     }
 
     private void leaveChat(String topicName, Chat chat) {
-
+        redisPublisher.publish(new ChannelTopic(topicName), chat);
     }
 
     private void sendChat(String topicName, Chat chat) {
-
+        redisMessageListenerContainer.addMessageListener(redisSubscriber, new ChannelTopic(topicName));
+        redisPublisher.publish(new ChannelTopic(topicName), chat);
     }
 }

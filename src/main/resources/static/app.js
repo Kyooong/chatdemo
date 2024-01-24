@@ -1,12 +1,12 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/gs-guide-websocket'
+    brokerURL: 'ws://localhost:8080/partyroom'
 });
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
+    stompClient.subscribe('/sub/chat/1', (response) => {
+        console.log(response)
     });
 };
 
@@ -43,8 +43,18 @@ function disconnect() {
 
 function sendName() {
     stompClient.publish({
-        destination: "/partyroom/hello",
-        body: JSON.stringify({'name': $("#name").val()})
+        destination: "/pub/chat/1",
+        body: JSON.stringify({
+            "id": 1,
+            "user": {
+                "id": 1,
+                "email": "abc@pfplay.com",
+                "nickname": $("#name").val()
+            },
+            "message": "hello",
+            "topic": "1",
+            "messageType": "CHAT"
+        })
     });
 }
 

@@ -25,17 +25,18 @@ public class RedisSubscriber implements MessageListener {
             final Chat chat = objectMapper.readValue(publishMessage, Chat.class);
 
             if (chat.getMessageType().equals(Chat.MessageType.CHAT)) {
-                messagingTemplate.convertAndSend("/sub/chat/room/" + chat.getTopic(), chat);
+                System.out.println(chat.getUser().getNickname());
+                messagingTemplate.convertAndSend("/sub/chat/" + chat.getTopic(), chat);
                 return;
             }
 
             if (chat.getMessageType().equals(Chat.MessageType.JOIN)) {
-                messagingTemplate.convertAndSend("/sub/chat/room" + chat.getTopic(), chat);
+                messagingTemplate.convertAndSend("/sub/chat/" + chat.getTopic(), chat);
                 return;
             }
 
             if (chat.getMessageType().equals(Chat.MessageType.LEAVE)) {
-                messagingTemplate.convertAndSend("/sub/chat/room" + chat.getTopic(), chat);
+                messagingTemplate.convertAndSend("/sub/chat/" + chat.getTopic(), chat);
                 return;
             }
 
